@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#D5D5D8"
+    android:divider="#ffffff"
+    android:gravity="center"
+    android:padding="5dp"
+    android:showDividers="middle"
+    tools:context=".view.drawer.fragment.Listado_fragment">
+
+    <TextView
+        android:id="@+id/tvproductor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="3"
+        android:gravity="center"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvfecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textStyle="bold" />
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/btneditar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/roundedbuttom"
+            android:padding="2dp"
+            android:src="@drawable/ic_baseline_edit_24"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/btneliminar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/roundedbuttom"
+            android:padding="2dp"
+            android:src="@drawable/ic_baseline_format_list_bulleted_24"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/btndetalle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/roundedbuttom"
+            android:padding="2dp"
+            android:src="@drawable/ic_baseline_delete_forever_24"></ImageButton>
+    </TableRow>
+
+</TableRow>

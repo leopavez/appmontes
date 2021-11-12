@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cl.app.montes">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logomontes"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/logomontes"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppMontes">
+        <activity android:name=".view.main.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".view.login.LoginActivity">
+        </activity>
+        <activity android:name=".view.editar.EditarActivity">
+        </activity>
+        <activity
+            android:name=".view.drawer.MenuDrawerActivity"
+            android:label="Nuevo recorrido"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+        </activity>
+        <activity
+            android:name=".view.detalle.DetalleActivity"
+            android:label="Detalle de Recorrido">
+        </activity>
+
+    </application>
+
+</manifest>

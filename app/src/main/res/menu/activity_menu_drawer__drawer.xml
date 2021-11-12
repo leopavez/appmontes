@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item android:title="Recorrido">
+        <menu>
+            <item
+                android:id="@+id/nav_formulario"
+                android:icon="@drawable/ic_baseline_fiber_new_24"
+                android:title="Nuevo recorrido">
+            </item>
+            <item
+                android:id="@+id/nav_listado"
+                android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+                android:title="Listado de recorridos">
+            </item>
+        </menu>
+    </item>
+</menu>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_gravity="center">
+
+
+
+        <TextView
+            android:id="@+id/tvfechahora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Fecha y Hora">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvrecorrido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:layout_marginLeft="10dp"
+            android:text="Recorrido: "
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvproductor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="110dp"
+            android:layout_marginLeft="10dp"
+            android:text="Productor: "
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvproducto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="140dp"
+            android:layout_marginLeft="10dp"
+            android:text="Producto: "
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvvariedad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="170dp"
+            android:layout_marginLeft="10dp"
+            android:text="Variedad: "
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvtara"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:layout_marginLeft="10dp"
+            android:text="Tara: "
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvbandejaspendientes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="230dp"
+            android:layout_marginLeft="10dp"
+            android:text="Bandejas pendientes: "
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvbandejasentregadas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="260dp"
+            android:layout_marginLeft="10dp"
+            android:text="Bandejas entregadas: "
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvcantidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="290dp"
+            android:layout_marginLeft="10dp"
+            android:text="Cantidad: "
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvkilosbrutos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="320dp"
+            android:layout_marginLeft="10dp"
+            android:text="Kilos brutos: "
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvkilosnetos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="350dp"
+            android:layout_marginLeft="10dp"
+            android:text="Kilos netos: "
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvtotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="380dp"
+            android:layout_marginLeft="10dp"
+            android:text="Total: "
+            android:textStyle="bold">
+        </TextView>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
