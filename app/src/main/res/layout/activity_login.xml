@@ -64,6 +64,15 @@
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_recordar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Recordar usuario y contraseña"
+            app:theme="@style/Switch">
+
+        </androidx.appcompat.widget.SwitchCompat>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
