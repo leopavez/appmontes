@@ -445,7 +445,7 @@ public class Formulario_fragment extends Fragment {
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                    boolean resultado =  myDB.guardarRegistros(1,fecha,hora,idrecorrido,idproductor,idproductos,idvariedad,
-                            idtara,"bandeja",cantidad,kilosb,k_netos,total__,bpendientes, bentregadas, precio_usuario.toString());
+                            idtara,"bandeja",cantidad,kilosb,k_netos,total__,bpendientes, bentregadas, precio_usuario.getText().toString());
 
                    if (resultado){
                        progressDialog.dismiss();

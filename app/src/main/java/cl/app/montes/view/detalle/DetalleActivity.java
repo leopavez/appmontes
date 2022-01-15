@@ -18,7 +18,7 @@ public class DetalleActivity extends AppCompatActivity {
 
     String id_registro = "";
     DatabaseHelper myDB;
-    TextView recorrido, productor, fechahora, producto, variedad, tara, bandejas_p, bandejas_e, cantidad, kb, kn, total;
+    TextView recorrido, productor, fechahora, producto, variedad, tara, bandejas_p, bandejas_e, cantidad, kb, kn, total, precio_usuario;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public class DetalleActivity extends AppCompatActivity {
         kn = (TextView)findViewById(R.id.tvkilosnetos);
         total = (TextView)findViewById(R.id.tvtotal);
         cantidad = (TextView)findViewById(R.id.tvcantidad);
+        precio_usuario = (TextView)findViewById(R.id.tvprecio_usuario);
 
         cargarDetalle();
 
@@ -56,7 +57,7 @@ public class DetalleActivity extends AppCompatActivity {
 
             Cursor cursor = db.rawQuery("SELECT reg.fecha, reg.hora, reco.name, pro.razon_social, prod.name, va.name, " +
                     "ta.name_envase, reg.bandejas_pendientes, reg.bandejas_entregadas, reg.cantidad_envase, reg.kilos_brutos, " +
-                    "reg.kilos_netos, reg.total FROM registros reg " +
+                    "reg.kilos_netos, reg.total, reg.precio_usuario FROM registros reg " +
                     "INNER JOIN recorrido reco ON reg.recorrido = reco.id " +
                     "INNER JOIN productores pro ON reg.productor = pro.id " +
                     "INNER JOIN productos prod ON reg.producto = prod.id " +
@@ -78,6 +79,7 @@ public class DetalleActivity extends AppCompatActivity {
                 kb.setText("Kilos brutos: "+cursor.getString(10));
                 kn.setText("Kilos netos: "+cursor.getString(11));
                 total.setText("Total: "+cursor.getString(12));
+                precio_usuario.setText("Precio: "+cursor.getString(13));
             }
         }catch (Exception e){
             e.printStackTrace();

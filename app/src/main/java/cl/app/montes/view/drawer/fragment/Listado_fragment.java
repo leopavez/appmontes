@@ -105,6 +105,12 @@ public class Listado_fragment extends Fragment {
                     db.execSQL("DELETE FROM registros");
 
                     Toast.makeText(getActivity().getApplicationContext(), "Los datos fueron eliminados correctamente", Toast.LENGTH_SHORT).show();
+
+                    Fragment fragment_actual = new Listado_fragment();
+                    Fragment fragment = new Listado_fragment();
+                    getFragmentManager().beginTransaction().remove(fragment_actual).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -129,7 +135,7 @@ public class Listado_fragment extends Fragment {
                         SQLiteDatabase db = myDB.getWritableDatabase();
                         Cursor cursor = db.rawQuery("SELECT id, id_usuario, fecha, hora, recorrido, productor, producto, " +
                                 "variedad, tara, bandeja, cantidad_envase, kilos_brutos, kilos_netos, total, bandejas_pendientes," +
-                                "bandejas_entregadas FROM registros", null);
+                                "bandejas_entregadas, precio_usuario FROM registros", null);
 
                         while (cursor.moveToNext()) {
 
@@ -143,6 +149,8 @@ public class Listado_fragment extends Fragment {
                             String kilos_b = cursor.getString(11);
                             String bandejas_pend = cursor.getString(14);
                             String bandejas_entre = cursor.getString(15);
+                            String precio_usuario = cursor.getString(16);
+                            String hora = cursor.getString(3);
 
 
                             final RequestParams params = new RequestParams();
@@ -156,6 +164,8 @@ public class Listado_fragment extends Fragment {
                             params.put("bandejas_entregadas", bandejas_entre);
                             params.put("bandejas", bandejas_cant);
                             params.put("kilos_brutos", kilos_b);
+                            params.put("precio", precio_usuario);
+                            params.put("hora", hora);
 
                             Handler handler = new Handler(Looper.getMainLooper());
                             Runnable runnable = new Runnable() {
