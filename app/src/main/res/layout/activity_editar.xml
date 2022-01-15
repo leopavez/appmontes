@@ -133,6 +133,23 @@
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textinputlayoutprecio_usuario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtpreciousuario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:drawablePadding="10dp"
+                        android:ems="10"
+                        android:hint="Precio"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <TextView
                     android:id="@+id/textviewkilosnetos"
                     android:layout_width="match_parent"

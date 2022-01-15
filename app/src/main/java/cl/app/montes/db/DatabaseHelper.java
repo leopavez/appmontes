@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.password4j.Password;
 
@@ -57,7 +56,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String name_tara_ = "name_envase";
 
     //TABLA REGISTROS
-    public static final String id_registro = "id";
     public static final String id_usuario_registro = "id_usuario";
     public static final String fecha_registro = "fecha";
     public static final String hora_registro = "hora";
@@ -73,6 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String total_registro = "total";
     public static final String bandejas_pendientes ="bandejas_pendientes";
     public static final String bandejas_entregadas = "bandejas_entregadas";
+    public static final String precio_usuario = "precio_usuario";
 
 
 
@@ -84,11 +83,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     final String CREAR_TABLA_TARA = "CREATE TABLE tara (id INTEGER unique, peso TEXT, name_envase TEXT)";
     final String CREAR_TABLA_REGISTROS = "CREATE TABLE registros(id INTEGER PRIMARY KEY AUTOINCREMENT unique, id_usuario INTEGER, fecha TEXT, hora TEXT," +
             "recorrido TEXT, productor TEXT, producto TEXT, variedad TEXT, tara TEXT, bandeja TEXT, cantidad_envase TEXT," +
-            "kilos_brutos TEXT, kilos_netos TEXT, total TEXT, bandejas_pendientes TEXT, bandejas_entregadas TEXT)";
+            "kilos_brutos TEXT, kilos_netos TEXT, total TEXT, bandejas_pendientes TEXT, bandejas_entregadas TEXT, precio_usuario TEXT)";
 
 
     public DatabaseHelper(Context context){
-        super(context, DATABASE_NAME, null,8);
+        super(context, DATABASE_NAME, null,9);
     }
 
     @Override
@@ -249,7 +248,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean guardarRegistros(int id_usuario, String fecha, String hora, String recorrido, String productor,
                                     String producto, String variedad,String tara, String bandeja, String cantidad_envase,
-                                    String kilos_brutos, String kilos_netos, String total, String bandejas_p, String bandejas_e){
+                                    String kilos_brutos, String kilos_netos, String total, String bandejas_p, String bandejas_e, String precio_u){
         try{
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
@@ -269,6 +268,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(total_registro, total);
             contentValues.put(bandejas_pendientes,bandejas_p);
             contentValues.put(bandejas_entregadas, bandejas_e);
+            contentValues.put(precio_usuario, precio_u);
 
             int resultado = (int) db.insert(TABLA_REGISTROS, null, contentValues);
             if(resultado == -1){
@@ -321,7 +321,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean editarRegistros(String id_registro, String recorrido, String productor,
                                     String producto, String variedad,String tara, String bandeja, String cantidad_envase,
-                                    String kilos_brutos, String kilos_netos, String total, String bandejas_p, String bandejas_e){
+                                    String kilos_brutos, String kilos_netos, String total, String bandejas_p, String bandejas_e, String precio_u){
         try{
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
@@ -338,6 +338,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(total_registro, total);
             contentValues.put(bandejas_pendientes,bandejas_p);
             contentValues.put(bandejas_entregadas, bandejas_e);
+            contentValues.put(precio_usuario, precio_u);
 
             int resultado = (int) db.update(TABLA_REGISTROS,contentValues,"id = ?",new String[]{id_registro});
             if(resultado == -1){

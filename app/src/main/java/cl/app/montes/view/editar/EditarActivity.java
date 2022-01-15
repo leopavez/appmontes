@@ -41,7 +41,7 @@ public class EditarActivity extends AppCompatActivity {
     String id_registro = "";
     SearchableSpinner productor;
     Spinner recorridospinner, productos, variedad, tara;
-    TextInputEditText cantidad_envase, kilos_brutos, band_p, band_e;
+    TextInputEditText cantidad_envase, kilos_brutos, band_p, band_e, precio_usuario;
     ArrayList<String> recorridoid = new ArrayList<>();
     ArrayList<String>productoresid = new ArrayList<>();
     ArrayList<String>productoid = new ArrayList<>();
@@ -58,7 +58,7 @@ public class EditarActivity extends AppCompatActivity {
     DatabaseHelper myDB;
     ProgressDialog progressDialog;
 
-    TextInputLayout cantidadlayout, bandejas_pendienteslayout, bandejas_entregadaslayout, kilos_brutoslayout;
+    TextInputLayout cantidadlayout, bandejas_pendienteslayout, bandejas_entregadaslayout, kilos_brutoslayout, precio_usuariolayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +77,8 @@ public class EditarActivity extends AppCompatActivity {
         band_e = (TextInputEditText)findViewById(R.id.txtbandejas_entregadas);
         band_p = (TextInputEditText)findViewById(R.id.txtbandejas_pendientes);
         kilos_netos = (TextView)findViewById(R.id.textviewkilosnetos);
+        precio_usuario = (TextInputEditText)findViewById(R.id.txtpreciousuario);
+        precio_usuariolayout = (TextInputLayout)findViewById(R.id.textinputlayoutprecio_usuario);
         total = (TextView)findViewById(R.id.texviewtotal);
         editar = (Button)findViewById(R.id.btneditar);
         cantidadlayout = (TextInputLayout)findViewById(R.id.textinputLayoutcantidad);
@@ -96,6 +98,21 @@ public class EditarActivity extends AppCompatActivity {
 
         productor.setTitle("Seleccione productor");
         productor.setPositiveButton("OK");
+
+        productos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int posicionprod = productos.getSelectedItemPosition();
+                String precioprod = precioproducto.get(posicionprod);
+                precio_usuario.setText(precioprod);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         band_p.addTextChangedListener(new TextWatcher() {
             @Override
@@ -394,7 +411,7 @@ public class EditarActivity extends AppCompatActivity {
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                     boolean resultado = myDB.editarRegistros(id_registro, idrecorrido, idproductor, idproductos, idvariedad,
-                            idtara, "bandeja", cantidad, kilosb, k_netos, total__, bpendientes, bentregadas);
+                            idtara, "bandeja", cantidad, kilosb, k_netos, total__, bpendientes, bentregadas, precio_usuario.toString());
 
                     if (resultado) {
                         progressDialog.dismiss();

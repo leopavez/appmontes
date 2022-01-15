@@ -33,6 +33,7 @@ import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,12 +50,12 @@ public class Formulario_fragment extends Fragment {
 
     SearchableSpinner productor;
     Spinner recorridospinner, productos, variedad, tara;
-    TextInputEditText cantidad_envase, kilos_brutos, band_p, band_e;
+    TextInputEditText cantidad_envase, kilos_brutos, band_p, band_e, precio_usuario;
     Button guardar;
     DatabaseHelper myDB;
     TextView kilos_netos, total;
     ProgressDialog progressDialog;
-    TextInputLayout cantidadlayout, bandejas_pendienteslayout, bandejas_entregadaslayout, kilos_brutoslayout;
+    TextInputLayout cantidadlayout, bandejas_pendienteslayout, bandejas_entregadaslayout, kilos_brutoslayout, precio_usuariolayout;
 
     ArrayList<String>recorridoid = new ArrayList<>();
     ArrayList<String>productoresid = new ArrayList<>();
@@ -89,6 +90,8 @@ public class Formulario_fragment extends Fragment {
         total = (TextView)getView().findViewById(R.id.texviewtotal);
         band_e = (TextInputEditText)getView().findViewById(R.id.txtbandejas_entregadas);
         band_p = (TextInputEditText)getView().findViewById(R.id.txtbandejas_pendientes);
+        precio_usuario = (TextInputEditText)getView().findViewById(R.id.txtpreciousuario);
+        precio_usuariolayout = (TextInputLayout)getView().findViewById(R.id.textinputlayoutprecio_usuario);
         cantidadlayout = (TextInputLayout)getView().findViewById(R.id.textinputLayoutcantidad);
         bandejas_entregadaslayout = (TextInputLayout)getView().findViewById(R.id.textinputlayoutbandejas_entregadas);
         bandejas_pendienteslayout = (TextInputLayout)getView().findViewById(R.id.textinputlayoutbandejas_pendientes);
@@ -105,6 +108,20 @@ public class Formulario_fragment extends Fragment {
 
         productor.setTitle("Selecciona el productor");
         productor.setPositiveButton("OK");
+
+        productos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int posicionprod = productos.getSelectedItemPosition();
+                String precioprod = precioproducto.get(posicionprod);
+                precio_usuario.setText(precioprod);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         band_p.addTextChangedListener(new TextWatcher() {
             @Override
@@ -153,22 +170,25 @@ public class Formulario_fragment extends Fragment {
                 String idtara = taraid.get(posiciontara);
 
                 if(!cantidad_envase.getText().toString().equals("") && !kilos_brutos.getText().toString().equals("")
-                        && !idtara.equals("0")){
-                    int kbrutos = Integer.parseInt(kilos_brutos.getText().toString());
+                        && !idtara.equals("0") && !precio_usuario.equals("")){
+                    Double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
                     int cant = Integer.parseInt(cantidad_envase.getText().toString());
 
 
                     int posicionproducto = productos.getSelectedItemPosition();
                     String precioprod = precioproducto.get(posicionproducto);
-                    int preciopr = Integer.parseInt(precioprod.toString());
+                    int preciopr = Integer.parseInt(precio_usuario.getText().toString());
 
                     Double knetos = kbrutos - (cant * peso);
                     Double total_ =  knetos * preciopr;
 
-                    kilos_netos.setText("Kilos netos: "+knetos);
-                    k_netos = String.valueOf(knetos).toString();
-                    total.setText("Total: "+total_);
-                    total__ = String.valueOf(total_).toString();
+                    DecimalFormat format = new DecimalFormat();
+                    format.setMaximumFractionDigits(2);
+
+                    kilos_netos.setText("Kilos netos: "+format.format(knetos).toString());
+                    k_netos = String.valueOf(format.format(knetos).toString()).toString();
+                    total.setText("Total: "+  format.format(total_).toString());
+                    total__ = String.valueOf(format.format(total_).toString()).toString();
                 }else{
                     kilos_netos.setText("Kilos netos: 0");
                     total.setText("Total: 0");
@@ -178,6 +198,54 @@ public class Formulario_fragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        precio_usuario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int posiciontara = tara.getSelectedItemPosition();
+                String pesotara = tarapeso.get(posiciontara);
+                Double peso = Double.parseDouble(pesotara.toString());
+                String idtara = taraid.get(posiciontara);
+
+                if(!cantidad_envase.getText().toString().equals("") && !kilos_brutos.getText().toString().equals("")
+                        && !idtara.equals("0") && !precio_usuario.equals("")){
+
+                    Double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
+                    int cant = Integer.parseInt(cantidad_envase.getText().toString());
+
+
+                    int posicionproducto = productos.getSelectedItemPosition();
+                    String precioprod = precioproducto.get(posicionproducto);
+                    int preciopr = Integer.parseInt(precio_usuario.getText().toString());
+
+                    Double knetos = kbrutos - (cant * peso);
+                    Double total_ =  knetos * preciopr;
+
+                    DecimalFormat format = new DecimalFormat();
+                    format.setMaximumFractionDigits(2);
+
+                    kilos_netos.setText("Kilos netos: "+format.format(knetos).toString());
+                    k_netos = String.valueOf(format.format(knetos).toString()).toString();
+                    total.setText("Total: "+  format.format(total_).toString());
+                    total__ = String.valueOf(format.format(total_).toString()).toString();
+                }else{
+                    kilos_netos.setText("Kilos netos: 0");
+                    total.setText("Total: 0");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(precio_usuario.getText().toString().equals("")){
+                    precio_usuario.setText("0");
+                }
             }
         });
         cantidad_envase.addTextChangedListener(new TextWatcher() {
@@ -200,23 +268,26 @@ public class Formulario_fragment extends Fragment {
                 }
 
                 if(!cantidad_envase.getText().toString().equals("") && !kilos_brutos.getText().toString().equals("")
-                && !idtara.equals("0")){
+                && !idtara.equals("0") && !precio_usuario.equals("")){
 
-                    int kbrutos = Integer.parseInt(kilos_brutos.getText().toString());
+                    Double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
                     int cant = Integer.parseInt(cantidad_envase.getText().toString());
 
 
                     int posicionproducto = productos.getSelectedItemPosition();
                     String precioprod = precioproducto.get(posicionproducto);
-                    int preciopr = Integer.parseInt(precioprod.toString());
+                    int preciopr = Integer.parseInt(precio_usuario.getText().toString());
 
                     Double knetos = kbrutos - (cant * peso);
                     Double total_ =  knetos * preciopr;
 
-                    kilos_netos.setText("Kilos netos: "+knetos);
-                    k_netos = String.valueOf(knetos).toString();
-                    total.setText("Total: "+total_);
-                    total__ = String.valueOf(total_).toString();
+                    DecimalFormat format = new DecimalFormat();
+                    format.setMaximumFractionDigits(2);
+
+                    kilos_netos.setText("Kilos netos: "+format.format(knetos).toString());
+                    k_netos = String.valueOf(format.format(knetos).toString()).toString();
+                    total.setText("Total: "+  format.format(total_).toString());
+                    total__ = String.valueOf(format.format(total_).toString()).toString();
                 }else{
                     kilos_netos.setText("Kilos netos: 0");
                     total.setText("Total: 0");
@@ -249,22 +320,25 @@ public class Formulario_fragment extends Fragment {
                 }
 
                 if(!cantidad_envase.getText().toString().equals("") && !kilos_brutos.getText().toString().equals("")
-                        && !idtara.equals("0")){
-                    double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
+                        && !idtara.equals("0") && !precio_usuario.equals("")){
+                    Double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
                     int cant = Integer.parseInt(cantidad_envase.getText().toString());
 
 
                     int posicionproducto = productos.getSelectedItemPosition();
                     String precioprod = precioproducto.get(posicionproducto);
-                    int preciopr = Integer.parseInt(precioprod.toString());
+                    int preciopr = Integer.parseInt(precio_usuario.getText().toString());
 
                     Double knetos = kbrutos - (cant * peso);
                     Double total_ =  knetos * preciopr;
 
-                    kilos_netos.setText("Kilos netos: "+knetos);
-                    k_netos = String.valueOf(knetos).toString();
-                    total.setText("Total: "+total_);
-                    total__ = String.valueOf(total_).toString();
+                    DecimalFormat format = new DecimalFormat();
+                    format.setMaximumFractionDigits(2);
+
+                    kilos_netos.setText("Kilos netos: "+format.format(knetos).toString());
+                    k_netos = String.valueOf(format.format(knetos).toString()).toString();
+                    total.setText("Total: "+  format.format(total_).toString());
+                    total__ = String.valueOf(format.format(total_).toString()).toString();
                 }else{
                     kilos_netos.setText("Kilos netos: 0");
                     total.setText("Total: 0");
@@ -371,7 +445,7 @@ public class Formulario_fragment extends Fragment {
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                    boolean resultado =  myDB.guardarRegistros(1,fecha,hora,idrecorrido,idproductor,idproductos,idvariedad,
-                            idtara,"bandeja",cantidad,kilosb,k_netos,total__,bpendientes, bentregadas);
+                            idtara,"bandeja",cantidad,kilosb,k_netos,total__,bpendientes, bentregadas, precio_usuario.toString());
 
                    if (resultado){
                        progressDialog.dismiss();
