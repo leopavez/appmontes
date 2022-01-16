@@ -28,6 +28,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import cl.app.montes.R;
@@ -43,13 +44,16 @@ public class EditarActivity extends AppCompatActivity {
     Spinner recorridospinner, productos, variedad, tara;
     TextInputEditText cantidad_envase, kilos_brutos, band_p, band_e, precio_usuario;
     ArrayList<String> recorridoid = new ArrayList<>();
+    ArrayList<String> recorridoname = new ArrayList<>();
     ArrayList<String>productoresid = new ArrayList<>();
     ArrayList<String>productoid = new ArrayList<>();
+    ArrayList<String>productoname = new ArrayList<>();
     ArrayList<String>productorname = new ArrayList<>();
     ArrayList<String>variedadid = new ArrayList<>();
     ArrayList<String>variedadname = new ArrayList<>();
     ArrayList<String>taraid = new ArrayList<>();
     ArrayList<String>tarapeso = new ArrayList<>();
+    ArrayList<String>taraname = new ArrayList<>();
     ArrayList<String>precioproducto = new ArrayList<>();
     TextView kilos_netos, total;
     String k_netos = "";
@@ -163,7 +167,7 @@ public class EditarActivity extends AppCompatActivity {
 
                 if(!cantidad_envase.getText().toString().equals("") && !kilos_brutos.getText().toString().equals("")
                         && !idtara.equals("0")){
-                    int kbrutos = Integer.parseInt(kilos_brutos.getText().toString());
+                    Double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
                     int cant = Integer.parseInt(cantidad_envase.getText().toString());
 
 
@@ -174,10 +178,13 @@ public class EditarActivity extends AppCompatActivity {
                     Double knetos = kbrutos - (cant * peso);
                     Double total_ =  knetos * preciopr;
 
-                    kilos_netos.setText("Kilos netos: "+knetos);
-                    k_netos = String.valueOf(knetos).toString();
-                    total.setText("Total: "+total_);
-                    total__ = String.valueOf(total_).toString();
+                    DecimalFormat format = new DecimalFormat();
+                    format.setMaximumFractionDigits(2);
+
+                    kilos_netos.setText("Kilos netos: "+format.format(knetos).toString());
+                    k_netos = String.valueOf(format.format(knetos).toString()).toString();
+                    total.setText("Total: "+  format.format(total_).toString());
+                    total__ = String.valueOf(format.format(total_).toString()).toString();
                 }else{
                     kilos_netos.setText("Kilos netos: 0");
                     total.setText("Total: 0");
@@ -201,7 +208,7 @@ public class EditarActivity extends AppCompatActivity {
 
                 if(!cantidad_envase.getText().toString().equals("") && !kilos_brutos.getText().toString().equals("")
                         && !idtara.equals("0")){
-                    int kbrutos = Integer.parseInt(kilos_brutos.getText().toString());
+                    Double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
                     int cant = Integer.parseInt(cantidad_envase.getText().toString());
 
 
@@ -212,10 +219,13 @@ public class EditarActivity extends AppCompatActivity {
                     Double knetos = kbrutos - (cant * peso);
                     Double total_ =  knetos * preciopr;
 
-                    kilos_netos.setText("Kilos netos: "+knetos);
-                    k_netos = String.valueOf(knetos).toString();
-                    total.setText("Total: "+total_);
-                    total__ = String.valueOf(total_).toString();
+                    DecimalFormat format = new DecimalFormat();
+                    format.setMaximumFractionDigits(2);
+
+                    kilos_netos.setText("Kilos netos: "+format.format(knetos).toString());
+                    k_netos = String.valueOf(format.format(knetos).toString()).toString();
+                    total.setText("Total: "+  format.format(total_).toString());
+                    total__ = String.valueOf(format.format(total_).toString()).toString();
                 }else{
                     kilos_netos.setText("Kilos netos: 0");
                     total.setText("Total: 0");
@@ -248,7 +258,7 @@ public class EditarActivity extends AppCompatActivity {
 
                 if(!cantidad_envase.getText().toString().equals("") && !kilos_brutos.getText().toString().equals("")
                         && !idtara.equals("0")){
-                    int kbrutos = Integer.parseInt(kilos_brutos.getText().toString());
+                    Double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
                     int cant = Integer.parseInt(cantidad_envase.getText().toString());
 
 
@@ -259,10 +269,13 @@ public class EditarActivity extends AppCompatActivity {
                     Double knetos = kbrutos - (cant * peso);
                     Double total_ =  knetos * preciopr;
 
-                    kilos_netos.setText("Kilos netos: "+knetos);
-                    k_netos = String.valueOf(knetos).toString();
-                    total.setText("Total: "+total_);
-                    total__ = String.valueOf(total_).toString();
+                    DecimalFormat format = new DecimalFormat();
+                    format.setMaximumFractionDigits(2);
+
+                    kilos_netos.setText("Kilos netos: "+format.format(knetos).toString());
+                    k_netos = String.valueOf(format.format(knetos).toString()).toString();
+                    total.setText("Total: "+  format.format(total_).toString());
+                    total__ = String.valueOf(format.format(total_).toString()).toString();
                 }else{
                     kilos_netos.setText("Kilos netos: 0");
                     total.setText("Total: 0");
@@ -296,7 +309,7 @@ public class EditarActivity extends AppCompatActivity {
 
                 if(!cantidad_envase.getText().toString().equals("") && !kilos_brutos.getText().toString().equals("")
                         && !idtara.equals("0")){
-                    double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
+                    Double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
                     int cant = Integer.parseInt(cantidad_envase.getText().toString());
 
 
@@ -307,10 +320,13 @@ public class EditarActivity extends AppCompatActivity {
                     Double knetos = kbrutos - (cant * peso);
                     Double total_ =  knetos * preciopr;
 
-                    kilos_netos.setText("Kilos netos: "+knetos);
-                    k_netos = String.valueOf(knetos).toString();
-                    total.setText("Total: "+total_);
-                    total__ = String.valueOf(total_).toString();
+                    DecimalFormat format = new DecimalFormat();
+                    format.setMaximumFractionDigits(2);
+
+                    kilos_netos.setText("Kilos netos: "+format.format(knetos).toString());
+                    k_netos = String.valueOf(format.format(knetos).toString()).toString();
+                    total.setText("Total: "+  format.format(total_).toString());
+                    total__ = String.valueOf(format.format(total_).toString()).toString();
                 }else{
                     kilos_netos.setText("Kilos netos: 0");
                     total.setText("Total: 0");
@@ -438,26 +454,31 @@ public class EditarActivity extends AppCompatActivity {
 
         SQLiteDatabase db = myDB.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT recorrido, productor, producto, variedad, tara, cantidad_envase, kilos_brutos, kilos_netos," +
-                " total, bandejas_pendientes, bandejas_entregadas FROM registros WHERE id ='"+id_registro+"'", null);
+                " total, bandejas_pendientes, bandejas_entregadas, precio_usuario FROM registros WHERE id ='"+id_registro+"'", null);
 
 
         if (cursor.moveToFirst()){
 
             int idreco = Integer.parseInt(cursor.getString(0));
-            String posreco = recorridoid.get(idreco);
+            String posreco = "";
 
             int idproductor = Integer.parseInt(cursor.getString(1));
-            Log.i("PRODUCTOR", ""+idproductor);
             String posprod = "";
 
             int idproducto = Integer.parseInt(cursor.getString(2));
-            String posproducto = productoid.get(idproducto);
+            String posproducto = "";
 
             int idvariedad = Integer.parseInt(cursor.getString(3));
             String posvar = "";
 
+            int idtara = Integer.parseInt(cursor.getString(4));
+            String postara = "";
+
             Cursor cursor1 = db.rawQuery("SELECT name FROM variedad WHERE id = '"+idvariedad+"'", null);
             Cursor cursor2 = db.rawQuery("SELECT razon_social FROM productores WHERE id = '"+idproductor+"'",null);
+            Cursor cursor3 = db.rawQuery("SELECT name from recorrido WHERE id = '"+idreco+"'", null);
+            Cursor cursor4 = db.rawQuery("SELECT id, name, precio FROM productos WHERE id = '"+idproducto+"'", null);
+            Cursor cursor5 = db.rawQuery("SELECT id, name_envase, peso FROM tara WHERE id = '"+idtara+"'", null);
             if (cursor1.moveToFirst()){
                 int posvariedad = variedadname.indexOf(cursor1.getString(0));
                 posvar = String.valueOf(posvariedad);
@@ -466,9 +487,18 @@ public class EditarActivity extends AppCompatActivity {
                 int posproductorr = productorname.indexOf(cursor2.getString(0));
                 posprod = String.valueOf(posproductorr);
             }
-
-            int idtara = Integer.parseInt(cursor.getString(4));
-            String postara = taraid.get(idtara);
+            if (cursor3.moveToFirst()){
+                int posrecorrido = recorridoname.indexOf(cursor3.getString(0));
+                posreco = String.valueOf(posrecorrido);
+            }
+            if (cursor4.moveToFirst()){
+                int posproductos = productoname.indexOf(cursor4.getString(1));
+                posproducto = String.valueOf(posproductos);
+            }
+            if (cursor5.moveToFirst()){
+                int positara = taraname.indexOf(cursor5.getString(1));
+                postara = String.valueOf(positara);
+            }
 
             recorridospinner.setSelection(Integer.parseInt(posreco));
             productor.setSelection(Integer.parseInt(posprod));
@@ -479,6 +509,7 @@ public class EditarActivity extends AppCompatActivity {
             band_e.setText(cursor.getString(10));
             cantidad_envase.setText(cursor.getString(5));
             kilos_brutos.setText(cursor.getString(6));
+            precio_usuario.setText(cursor.getString(11));
             kilos_netos.setText("Kilos netos: "+cursor.getString(7));
             total.setText("Total: "+cursor.getString(8));
         }
@@ -489,6 +520,7 @@ public class EditarActivity extends AppCompatActivity {
         ArrayList<String>recorrido = new ArrayList<>();
         recorrido.add("Seleccione recorrido");
         recorridoid.add("0");
+        recorridoname.add("Seleccione");
 
         SQLiteDatabase db = myDB.getReadableDatabase();
 
@@ -496,6 +528,7 @@ public class EditarActivity extends AppCompatActivity {
         while (c.moveToNext()){
             recorrido.add(c.getString(c.getColumnIndex("name")));
             recorridoid.add(c.getString(c.getColumnIndex("id")));
+            recorridoname.add(c.getString(c.getColumnIndex("name")));
         }
         ArrayAdapter adapterRecorrido = new ArrayAdapter<>(EditarActivity.this, android.R.layout.simple_spinner_item, recorrido);
         adapterRecorrido.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -527,6 +560,7 @@ public class EditarActivity extends AppCompatActivity {
         producto.add("Seleccione producto");
         productoid.add("0");
         precioproducto.add("0");
+        productoname.add("Seleccione");
 
         SQLiteDatabase db = myDB.getReadableDatabase();
 
@@ -538,6 +572,7 @@ public class EditarActivity extends AppCompatActivity {
             producto.add(nombreprecio);
             productoid.add(c.getString(c.getColumnIndex("id")));
             precioproducto.add(c.getString(c.getColumnIndex("precio")));
+            productoname.add(c.getString(c.getColumnIndex("name")));
         }
         ArrayAdapter adapterProductos = new ArrayAdapter<>(EditarActivity.this, android.R.layout.simple_spinner_item, producto);
         adapterProductos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -571,6 +606,7 @@ public class EditarActivity extends AppCompatActivity {
         taraarray.add("Seleccione tara");
         taraid.add("0");
         tarapeso.add("0");
+        taraname.add("Seleccione");
 
         SQLiteDatabase db = myDB.getReadableDatabase();
 
@@ -582,6 +618,7 @@ public class EditarActivity extends AppCompatActivity {
             taraarray.add(nombrepeso);
             taraid.add(c.getString(c.getColumnIndex("id")));
             tarapeso.add(c.getString(c.getColumnIndex("peso")));
+            taraname.add(c.getString(c.getColumnIndex("name_envase")));
         }
         ArrayAdapter adapterTara = new ArrayAdapter<>(EditarActivity.this, android.R.layout.simple_spinner_item, taraarray);
         adapterTara.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
