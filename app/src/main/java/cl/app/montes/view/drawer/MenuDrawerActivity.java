@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.navigation.NavigationView;
 
 import cl.app.montes.R;
+import cl.app.montes.view.drawer.fragment.Cc_fragment;
 import cl.app.montes.view.drawer.fragment.Formulario_fragment;
 import cl.app.montes.view.drawer.fragment.Listado_fragment;
 import cl.app.montes.view.login.LoginActivity;
@@ -101,6 +102,10 @@ public class MenuDrawerActivity extends AppCompatActivity implements NavigationV
         }
         if(id == R.id.nav_listado){
             fragment = new Listado_fragment();
+            fragmentselect = true;
+        }
+        if(id == R.id.nav_cuenta_corriente){
+            fragment = new Cc_fragment();
             fragmentselect = true;
         }
 

@@ -41,7 +41,7 @@ public class EditarActivity extends AppCompatActivity {
 
     String id_registro = "";
     SearchableSpinner productor;
-    Spinner recorridospinner, productos, variedad, tara;
+    Spinner recorridospinner, productos, variedad, tara, tipoEnvasesPendientes, tipoEnvasesEntregados;;
     TextInputEditText cantidad_envase, kilos_brutos, band_p, band_e, precio_usuario;
     ArrayList<String> recorridoid = new ArrayList<>();
     ArrayList<String> recorridoname = new ArrayList<>();
@@ -61,6 +61,7 @@ public class EditarActivity extends AppCompatActivity {
     Button editar;
     DatabaseHelper myDB;
     ProgressDialog progressDialog;
+    int flagTaraRecepcionar = 0;
 
     TextInputLayout cantidadlayout, bandejas_pendienteslayout, bandejas_entregadaslayout, kilos_brutoslayout, precio_usuariolayout;
 
@@ -76,6 +77,8 @@ public class EditarActivity extends AppCompatActivity {
         productos = (Spinner)findViewById(R.id.productoSpinner);
         variedad = (Spinner)findViewById(R.id.especieSpinner);
         tara = (Spinner)findViewById(R.id.taraSpinner);
+        tipoEnvasesEntregados = (Spinner)findViewById(R.id.spinnerEnvasesEntregados);
+        tipoEnvasesPendientes = (Spinner)findViewById(R.id.spinnerEnvasesPendientes);
         cantidad_envase = (TextInputEditText)findViewById(R.id.txtcantidadenvase);
         kilos_brutos = (TextInputEditText)findViewById(R.id.txtkilosbrutos);
         band_e = (TextInputEditText)findViewById(R.id.txtbandejas_entregadas);
@@ -90,6 +93,7 @@ public class EditarActivity extends AppCompatActivity {
         bandejas_pendienteslayout = (TextInputLayout)findViewById(R.id.textinputlayoutbandejas_pendientes);
         kilos_brutoslayout = (TextInputLayout)findViewById(R.id.textinputlayoutkilos_brutos);
         myDB = new DatabaseHelper(EditarActivity.this);
+
 
         //ADAPTADORES DE SPINNER
         cargarrecorrido();
@@ -140,7 +144,7 @@ public class EditarActivity extends AppCompatActivity {
         band_e.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                band_p.setText(cantidad_envase.getText().toString());
             }
 
             @Override
@@ -152,7 +156,26 @@ public class EditarActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(!cantidad_envase.getText().toString().equals("") && !band_e.getText().toString().equals("")){
+                    int envases_entregar = Integer.parseInt(band_e.getText().toString());
+                    int envases_pendientes = Integer.parseInt(band_p.getText().toString());
 
+
+                    if (envases_entregar <= envases_pendientes){
+                        String pendientes_nuevo = String.valueOf((envases_pendientes - envases_entregar));
+                        band_p.setText(pendientes_nuevo);
+                    }
+
+                    int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
+                    String idenvaseentregado = taraid.get(posicionenvaseentregado);
+
+                    int posiciontara = tara.getSelectedItemPosition();
+                    String idtara = taraid.get(posiciontara);
+
+                    if(idtara != idenvaseentregado){
+                        band_p.setText(cantidad_envase.getText().toString());
+                    }
+                }
             }
         });
 
@@ -201,20 +224,27 @@ public class EditarActivity extends AppCompatActivity {
         tara.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                flagTaraRecepcionar = flagTaraRecepcionar + 1;
                 int posiciontara = tara.getSelectedItemPosition();
                 String pesotara = tarapeso.get(posiciontara);
                 Double peso = Double.parseDouble(pesotara.toString());
                 String idtara = taraid.get(posiciontara);
 
+
+                if(flagTaraRecepcionar > 1){
+                    tipoEnvasesEntregados.setSelection(posiciontara);
+                    tipoEnvasesPendientes.setSelection(posiciontara);
+                }
+
                 if(!cantidad_envase.getText().toString().equals("") && !kilos_brutos.getText().toString().equals("")
-                        && !idtara.equals("0")){
+                        && !idtara.equals("0") && !precio_usuario.equals("")){
                     Double kbrutos = Double.parseDouble(kilos_brutos.getText().toString());
                     int cant = Integer.parseInt(cantidad_envase.getText().toString());
 
 
                     int posicionproducto = productos.getSelectedItemPosition();
                     String precioprod = precioproducto.get(posicionproducto);
-                    int preciopr = Integer.parseInt(precioprod.toString());
+                    int preciopr = Integer.parseInt(precio_usuario.getText().toString());
 
                     Double knetos = kbrutos - (cant * peso);
                     Double total_ =  knetos * preciopr;
@@ -230,6 +260,24 @@ public class EditarActivity extends AppCompatActivity {
                     kilos_netos.setText("Kilos netos: 0");
                     total.setText("Total: 0");
                 }
+
+                if(!cantidad_envase.getText().toString().equals("") && !band_e.getText().toString().equals("")){
+                    int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
+                    String idenvaseentregado = taraid.get(posicionenvaseentregado);
+
+                    int envases_entregar = Integer.parseInt(band_e.getText().toString());
+                    int envases_pendientes = Integer.parseInt(band_p.getText().toString());
+
+
+                    if (envases_entregar <= envases_pendientes){
+                        String pendientes_nuevo = String.valueOf((envases_pendientes - envases_entregar));
+                        band_p.setText(pendientes_nuevo);
+                    }
+
+                    if(idtara != idenvaseentregado){
+                        band_p.setText(cantidad_envase.getText().toString());
+                    }
+                }
             }
 
             @Override
@@ -237,6 +285,40 @@ public class EditarActivity extends AppCompatActivity {
 
             }
         });
+
+        tipoEnvasesEntregados.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int posiciontara = tara.getSelectedItemPosition();
+                String idtara = taraid.get(posiciontara);
+                int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
+                String idenvaseentregado = taraid.get(posicionenvaseentregado);
+
+
+
+                if(!cantidad_envase.getText().toString().equals("") && !band_e.getText().toString().equals("")){
+
+                    int envases_entregar = Integer.parseInt(band_e.getText().toString());
+                    int envases_pendientes = Integer.parseInt(band_p.getText().toString());
+
+                    if (envases_entregar <= envases_pendientes){
+                        String pendientes_nuevo = String.valueOf((envases_pendientes - envases_entregar));
+                        band_p.setText(pendientes_nuevo);
+                    }
+
+                    if(idtara != idenvaseentregado){
+                        band_p.setText(cantidad_envase.getText().toString());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         cantidad_envase.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -280,11 +362,31 @@ public class EditarActivity extends AppCompatActivity {
                     kilos_netos.setText("Kilos netos: 0");
                     total.setText("Total: 0");
                 }
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(!cantidad_envase.getText().toString().equals("") && !band_e.getText().toString().equals("")){
+                    band_p.setText(cantidad_envase.getText().toString());
+                    int envases_entregar = Integer.parseInt(band_e.getText().toString());
+                    int envases_pendientes = Integer.parseInt(band_p.getText().toString());
 
+
+                    if (envases_entregar <= envases_pendientes){
+                        String pendientes_nuevo = String.valueOf((envases_pendientes - envases_entregar));
+                        band_p.setText(pendientes_nuevo);
+                    }
+
+                    int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
+                    String idenvaseentregado = taraid.get(posicionenvaseentregado);
+                    int posiciontara = tara.getSelectedItemPosition();
+                    String idtara = taraid.get(posiciontara);
+
+                    if(idtara != idenvaseentregado){
+                        band_p.setText(cantidad_envase.getText().toString());
+                    }
+                }
             }
         });
 
@@ -357,6 +459,12 @@ public class EditarActivity extends AppCompatActivity {
                 int posiciontara = tara.getSelectedItemPosition();
                 String idtara = taraid.get(posiciontara);
 
+                int posicionenvasependiente = tipoEnvasesPendientes.getSelectedItemPosition();
+                String idenvasependiente = taraid.get(posicionenvasependiente);
+
+                int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
+                String idenvaseentregado = taraid.get(posicionenvaseentregado);
+
                 String cantidad = cantidad_envase.getText().toString();
                 String kilosb = kilos_brutos.getText().toString();
 
@@ -427,7 +535,8 @@ public class EditarActivity extends AppCompatActivity {
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                     boolean resultado = myDB.editarRegistros(id_registro, idrecorrido, idproductor, idproductos, idvariedad,
-                            idtara, "bandeja", cantidad, kilosb, k_netos, total__, bpendientes, bentregadas, precio_usuario.toString());
+                            idtara, "bandeja", cantidad, kilosb, k_netos, total__, bpendientes, bentregadas, precio_usuario.getText().toString(),
+                            idenvasependiente, idenvaseentregado);
 
                     if (resultado) {
                         progressDialog.dismiss();
@@ -454,7 +563,7 @@ public class EditarActivity extends AppCompatActivity {
 
         SQLiteDatabase db = myDB.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT recorrido, productor, producto, variedad, tara, cantidad_envase, kilos_brutos, kilos_netos," +
-                " total, bandejas_pendientes, bandejas_entregadas, precio_usuario FROM registros WHERE id ='"+id_registro+"'", null);
+                " total, bandejas_pendientes, bandejas_entregadas, precio_usuario, tipo_envase_pendiente, tipo_envase_entregado FROM registros WHERE id ='"+id_registro+"'", null);
 
 
         if (cursor.moveToFirst()){
@@ -474,11 +583,21 @@ public class EditarActivity extends AppCompatActivity {
             int idtara = Integer.parseInt(cursor.getString(4));
             String postara = "";
 
+            int idtipoenvasependiente = Integer.parseInt(cursor.getString(12));
+            String posttipoenvasependiente = "";
+
+            int idtipoenvaseentregado = Integer.parseInt(cursor.getString(13));
+            String posttipoenvaseentregado = "";
+
+
             Cursor cursor1 = db.rawQuery("SELECT name FROM variedad WHERE id = '"+idvariedad+"'", null);
             Cursor cursor2 = db.rawQuery("SELECT razon_social FROM productores WHERE id = '"+idproductor+"'",null);
             Cursor cursor3 = db.rawQuery("SELECT name from recorrido WHERE id = '"+idreco+"'", null);
             Cursor cursor4 = db.rawQuery("SELECT id, name, precio FROM productos WHERE id = '"+idproducto+"'", null);
             Cursor cursor5 = db.rawQuery("SELECT id, name_envase, peso FROM tara WHERE id = '"+idtara+"'", null);
+            Cursor cursorpendiente = db.rawQuery("SELECT id, name_envase FROM tara WHERE id = '"+idtipoenvasependiente+"'", null);
+            Cursor cursorentregado = db.rawQuery("SELECT id, name_envase FROM tara WHERE id = '"+idtipoenvaseentregado+"'", null);
+
             if (cursor1.moveToFirst()){
                 int posvariedad = variedadname.indexOf(cursor1.getString(0));
                 posvar = String.valueOf(posvariedad);
@@ -499,6 +618,14 @@ public class EditarActivity extends AppCompatActivity {
                 int positara = taraname.indexOf(cursor5.getString(1));
                 postara = String.valueOf(positara);
             }
+            if(cursorpendiente.moveToFirst()) {
+                int postipopendiente = taraname.indexOf(cursorpendiente.getString(1));
+                posttipoenvasependiente = String.valueOf(postipopendiente);
+            }
+            if(cursorentregado.moveToFirst()) {
+                int postipoentregado = taraname.indexOf(cursorentregado.getString(1));
+                posttipoenvaseentregado = String.valueOf(postipoentregado);
+            }
 
             recorridospinner.setSelection(Integer.parseInt(posreco));
             productor.setSelection(Integer.parseInt(posprod));
@@ -512,6 +639,8 @@ public class EditarActivity extends AppCompatActivity {
             precio_usuario.setText(cursor.getString(11));
             kilos_netos.setText("Kilos netos: "+cursor.getString(7));
             total.setText("Total: "+cursor.getString(8));
+            tipoEnvasesEntregados.setSelection(Integer.parseInt(posttipoenvaseentregado));
+            tipoEnvasesPendientes.setSelection(Integer.parseInt(posttipoenvasependiente));
         }
     }
 
@@ -603,7 +732,7 @@ public class EditarActivity extends AppCompatActivity {
     private void cargarTara(){
         //SPINNER VARIEDAD
         ArrayList<String>taraarray = new ArrayList<>();
-        taraarray.add("Seleccione tara");
+        taraarray.add("Seleccione el envase");
         taraid.add("0");
         tarapeso.add("0");
         taraname.add("Seleccione");
@@ -623,5 +752,7 @@ public class EditarActivity extends AppCompatActivity {
         ArrayAdapter adapterTara = new ArrayAdapter<>(EditarActivity.this, android.R.layout.simple_spinner_item, taraarray);
         adapterTara.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tara.setAdapter(adapterTara);
+        tipoEnvasesPendientes.setAdapter(adapterTara);
+        tipoEnvasesEntregados.setAdapter(adapterTara);
     }
 }

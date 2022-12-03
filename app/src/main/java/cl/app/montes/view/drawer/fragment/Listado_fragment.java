@@ -73,7 +73,8 @@ public class Listado_fragment extends Fragment {
     ArrayList<String> listaidregistros = new ArrayList<>();
     RequestQueue mRequestQueue;
     StringRequest mStringRequest;
-    String PROCESAR_URL = "https://agricolalosdelmonte.com/sistema/backend/public/api/v1/api/procesar";
+   //String PROCESAR_URL = "https://agricolalosdelmonte.com/sistema/backend/public/api/v1/api/procesar";
+    String PROCESAR_URL = "https://ac-turing.cl/sistema/backend/public/api/v1/api/procesar"; //TEST
     ProgressDialog progressDialog;
     SwipeMenuListView listado;
     TableLayout tabla_registros;
@@ -275,7 +276,7 @@ public class Listado_fragment extends Fragment {
                 SQLiteDatabase db = myDB.getWritableDatabase();
                 Cursor cursor = db.rawQuery("SELECT id, id_usuario, fecha, hora, recorrido, productor, producto, " +
                         "variedad, tara, bandeja, cantidad_envase, kilos_brutos, kilos_netos, total, bandejas_pendientes," +
-                        "bandejas_entregadas, precio_usuario, kilos_netos FROM registros", null);
+                        "bandejas_entregadas, precio_usuario, kilos_netos, tipo_envase_pendiente, tipo_envase_entregado FROM registros", null);
 
                 while (cursor.moveToNext()) {
 
@@ -292,6 +293,8 @@ public class Listado_fragment extends Fragment {
                     String precio_usuario = cursor.getString(16);
                     String hora = cursor.getString(3);
                     String kilos_netos = cursor.getString(17);
+                    String tipoenvase_pendiente = cursor.getString(18);
+                    String tipoenvase_entregado = cursor.getString(19);
 
 
                     final RequestParams params = new RequestParams();
@@ -301,13 +304,15 @@ public class Listado_fragment extends Fragment {
                     params.put("productos_id", productos_id);
                     params.put("fecha", fecha);
                     params.put("taras_id", taras_id);
-                    params.put("bandejas_pendientes", bandejas_pend);
-                    params.put("bandejas_entregadas", bandejas_entre);
                     params.put("bandejas", bandejas_cant);
                     params.put("kilos_brutos", kilos_b);
+                    params.put("kilos_netos", kilos_netos);
                     params.put("precio", precio_usuario);
                     params.put("hora", hora);
-                    params.put("kilos_netos", kilos_netos);
+                    params.put("envases_pendiente_id", tipoenvase_pendiente);
+                    params.put("envases_pendiente_cantidad", bandejas_pend);
+                    params.put("envases_entregado_id", tipoenvase_entregado);
+                    params.put("envases_entregado_cantidad", bandejas_entre);
 
                     Handler handler = new Handler(Looper.getMainLooper());
                     Runnable runnable = new Runnable() {

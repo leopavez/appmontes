@@ -72,6 +72,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String bandejas_pendientes ="bandejas_pendientes";
     public static final String bandejas_entregadas = "bandejas_entregadas";
     public static final String precio_usuario = "precio_usuario";
+    public static final String tipo_envase_entregado = "tipo_envase_entregado";
+    public static final String tipo_envase_pendiente = "tipo_envase_pendiente";
 
 
 
@@ -83,11 +85,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     final String CREAR_TABLA_TARA = "CREATE TABLE tara (id INTEGER unique, peso TEXT, name_envase TEXT)";
     final String CREAR_TABLA_REGISTROS = "CREATE TABLE registros(id INTEGER PRIMARY KEY AUTOINCREMENT unique, id_usuario INTEGER, fecha TEXT, hora TEXT," +
             "recorrido TEXT, productor TEXT, producto TEXT, variedad TEXT, tara TEXT, bandeja TEXT, cantidad_envase TEXT," +
-            "kilos_brutos TEXT, kilos_netos TEXT, total TEXT, bandejas_pendientes TEXT, bandejas_entregadas TEXT, precio_usuario TEXT)";
+            "kilos_brutos TEXT, kilos_netos TEXT, total TEXT, bandejas_pendientes TEXT, bandejas_entregadas TEXT, precio_usuario TEXT, tipo_envase_pendiente TEXT, tipo_envase_entregado Text)";
 
 
     public DatabaseHelper(Context context){
-        super(context, DATABASE_NAME, null,9);
+        super(context, DATABASE_NAME, null,10);
     }
 
     @Override
@@ -248,7 +250,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean guardarRegistros(int id_usuario, String fecha, String hora, String recorrido, String productor,
                                     String producto, String variedad,String tara, String bandeja, String cantidad_envase,
-                                    String kilos_brutos, String kilos_netos, String total, String bandejas_p, String bandejas_e, String precio_u){
+                                    String kilos_brutos, String kilos_netos, String total, String bandejas_p, String bandejas_e, String precio_u, String envase_pendiente, String envase_entregado){
         try{
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
@@ -269,6 +271,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(bandejas_pendientes,bandejas_p);
             contentValues.put(bandejas_entregadas, bandejas_e);
             contentValues.put(precio_usuario, precio_u);
+            contentValues.put(tipo_envase_pendiente, envase_pendiente);
+            contentValues.put(tipo_envase_entregado, envase_entregado);
+
 
             int resultado = (int) db.insert(TABLA_REGISTROS, null, contentValues);
             if(resultado == -1){
@@ -321,7 +326,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean editarRegistros(String id_registro, String recorrido, String productor,
                                     String producto, String variedad,String tara, String bandeja, String cantidad_envase,
-                                    String kilos_brutos, String kilos_netos, String total, String bandejas_p, String bandejas_e, String precio_u){
+                                    String kilos_brutos, String kilos_netos, String total, String bandejas_p, String bandejas_e, String precio_u, String tipoenvasependiente, String tipoenvaseentregado){
         try{
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
@@ -339,6 +344,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(bandejas_pendientes,bandejas_p);
             contentValues.put(bandejas_entregadas, bandejas_e);
             contentValues.put(precio_usuario, precio_u);
+            contentValues.put(tipo_envase_pendiente, tipoenvasependiente);
+            contentValues.put(tipo_envase_entregado, tipoenvaseentregado);
 
             int resultado = (int) db.update(TABLA_REGISTROS,contentValues,"id = ?",new String[]{id_registro});
             if(resultado == -1){

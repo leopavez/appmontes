@@ -49,7 +49,7 @@ public class Formulario_fragment extends Fragment {
 
 
     SearchableSpinner productor;
-    Spinner recorridospinner, productos, variedad, tara;
+    Spinner recorridospinner, productos, variedad, tara, tipoEnvasesPendientes, tipoEnvasesEntregados;
     TextInputEditText cantidad_envase, kilos_brutos, band_p, band_e, precio_usuario;
     Button guardar;
     DatabaseHelper myDB;
@@ -83,6 +83,8 @@ public class Formulario_fragment extends Fragment {
         productos = (Spinner)getView().findViewById(R.id.productoSpinner);
         variedad = (Spinner)getView().findViewById(R.id.especieSpinner);
         tara = (Spinner)getView().findViewById(R.id.taraSpinner);
+        tipoEnvasesEntregados = (Spinner)getView().findViewById(R.id.spinnerEnvasesEntregados);
+        tipoEnvasesPendientes = (Spinner)getView().findViewById(R.id.spinnerEnvasesPendientes);
         cantidad_envase = (TextInputEditText)getView().findViewById(R.id.txtcantidadenvase);
         kilos_brutos = (TextInputEditText)getView().findViewById(R.id.txtkilosbrutos);
         guardar = (Button)getView().findViewById(R.id.btnguardar);
@@ -146,10 +148,12 @@ public class Formulario_fragment extends Fragment {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                band_p.setText(cantidad_envase.getText().toString());
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
 
                 if (!band_e.getText().toString().equals("")){
                     bandejas_entregadaslayout.setErrorEnabled(false);
@@ -158,7 +162,26 @@ public class Formulario_fragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(!cantidad_envase.getText().toString().equals("") && !band_e.getText().toString().equals("")){
+                    int envases_entregar = Integer.parseInt(band_e.getText().toString());
+                    int envases_pendientes = Integer.parseInt(band_p.getText().toString());
 
+
+                    if (envases_entregar <= envases_pendientes){
+                        String pendientes_nuevo = String.valueOf((envases_pendientes - envases_entregar));
+                        band_p.setText(pendientes_nuevo);
+                    }
+
+                    int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
+                    String idenvaseentregado = taraid.get(posicionenvaseentregado);
+
+                    int posiciontara = tara.getSelectedItemPosition();
+                    String idtara = taraid.get(posiciontara);
+
+                    if(idtara != idenvaseentregado){
+                        band_p.setText(cantidad_envase.getText().toString());
+                    }
+                }
             }
         });
         tara.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -168,6 +191,9 @@ public class Formulario_fragment extends Fragment {
                 String pesotara = tarapeso.get(posiciontara);
                 Double peso = Double.parseDouble(pesotara.toString());
                 String idtara = taraid.get(posiciontara);
+
+                tipoEnvasesEntregados.setSelection(posiciontara);
+                tipoEnvasesPendientes.setSelection(posiciontara);
 
                 if(!cantidad_envase.getText().toString().equals("") && !kilos_brutos.getText().toString().equals("")
                         && !idtara.equals("0") && !precio_usuario.equals("")){
@@ -193,10 +219,62 @@ public class Formulario_fragment extends Fragment {
                     kilos_netos.setText("Kilos netos: 0");
                     total.setText("Total: 0");
                 }
+
+
+                if(!cantidad_envase.getText().toString().equals("") && !band_e.getText().toString().equals("")){
+                    int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
+                    String idenvaseentregado = taraid.get(posicionenvaseentregado);
+
+                    int envases_entregar = Integer.parseInt(band_e.getText().toString());
+                    int envases_pendientes = Integer.parseInt(band_p.getText().toString());
+
+
+                    if (envases_entregar <= envases_pendientes){
+                        String pendientes_nuevo = String.valueOf((envases_pendientes - envases_entregar));
+                        band_p.setText(pendientes_nuevo);
+                    }
+
+                    if(idtara != idenvaseentregado){
+                        band_p.setText(cantidad_envase.getText().toString());
+                    }
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        tipoEnvasesEntregados.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int posiciontara = tara.getSelectedItemPosition();
+                String idtara = taraid.get(posiciontara);
+                int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
+                String idenvaseentregado = taraid.get(posicionenvaseentregado);
+
+
+
+                if(!cantidad_envase.getText().toString().equals("") && !band_e.getText().toString().equals("")){
+
+                    int envases_entregar = Integer.parseInt(band_e.getText().toString());
+                    int envases_pendientes = Integer.parseInt(band_p.getText().toString());
+
+                    if (envases_entregar <= envases_pendientes){
+                        String pendientes_nuevo = String.valueOf((envases_pendientes - envases_entregar));
+                        band_p.setText(pendientes_nuevo);
+                    }
+
+                    if(idtara != idenvaseentregado){
+                        band_p.setText(cantidad_envase.getText().toString());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
@@ -263,6 +341,9 @@ public class Formulario_fragment extends Fragment {
                 Double peso = Double.parseDouble(pesotara.toString());
                 String idtara = taraid.get(posiciontara);
 
+                band_p.setText(cantidad_envase.getText().toString());
+
+
                 if (!cantidad_envase.getText().toString().equals("")){
                     cantidadlayout.setErrorEnabled(false);
                 }
@@ -296,7 +377,25 @@ public class Formulario_fragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(!cantidad_envase.getText().toString().equals("") && !band_e.getText().toString().equals("")){
+                    int envases_entregar = Integer.parseInt(band_e.getText().toString());
+                    int envases_pendientes = Integer.parseInt(band_p.getText().toString());
 
+
+                    if (envases_entregar <= envases_pendientes){
+                        String pendientes_nuevo = String.valueOf((envases_pendientes - envases_entregar));
+                        band_p.setText(pendientes_nuevo);
+                    }
+
+                    int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
+                    String idenvaseentregado = taraid.get(posicionenvaseentregado);
+                    int posiciontara = tara.getSelectedItemPosition();
+                    String idtara = taraid.get(posiciontara);
+
+                    if(idtara != idenvaseentregado){
+                        band_p.setText(cantidad_envase.getText().toString());
+                    }
+                }
             }
         });
 
@@ -370,6 +469,12 @@ public class Formulario_fragment extends Fragment {
                 int posiciontara = tara.getSelectedItemPosition();
                 String idtara = taraid.get(posiciontara);
 
+                int posicionenvasependiente = tipoEnvasesPendientes.getSelectedItemPosition();
+                String idenvasependiente = taraid.get(posicionenvasependiente);
+
+                int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
+                String idenvaseentregado = taraid.get(posicionenvaseentregado);
+
                 String cantidad = cantidad_envase.getText().toString();
                 String kilosb = kilos_brutos.getText().toString();
 
@@ -408,7 +513,7 @@ public class Formulario_fragment extends Fragment {
                         TextView errorText = (TextView)tara.getSelectedView();
                         errorText.setError("");
                         errorText.setTextColor(Color.RED);//just to highlight that this is an error
-                        errorText.setText("Seleccione tara");//changes the selected item text to this
+                        errorText.setText("Seleccione el envase");//changes the selected item text to this
                     }
                     if (cantidad.equals("")){
                         cantidadlayout.setErrorEnabled(true);
@@ -445,7 +550,8 @@ public class Formulario_fragment extends Fragment {
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                    boolean resultado =  myDB.guardarRegistros(1,fecha,hora,idrecorrido,idproductor,idproductos,idvariedad,
-                            idtara,"bandeja",cantidad,kilosb,k_netos,total__,bpendientes, bentregadas, precio_usuario.getText().toString());
+                            idtara,"bandeja",cantidad,kilosb,k_netos,total__,bpendientes, bentregadas, precio_usuario.getText().toString(),
+                           idenvasependiente, idenvaseentregado);
 
                    if (resultado){
                        progressDialog.dismiss();
@@ -544,7 +650,7 @@ public class Formulario_fragment extends Fragment {
     private void cargarTara(){
         //SPINNER VARIEDAD
         ArrayList<String>taraarray = new ArrayList<>();
-        taraarray.add("Seleccione tara");
+        taraarray.add("Seleccione el envase");
         taraid.add("0");
         tarapeso.add("0");
 
@@ -562,7 +668,8 @@ public class Formulario_fragment extends Fragment {
         ArrayAdapter adapterTara = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, taraarray);
         adapterTara.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tara.setAdapter(adapterTara);
+        tipoEnvasesPendientes.setAdapter(adapterTara);
+        tipoEnvasesEntregados.setAdapter(adapterTara);
+
     }
-
-
 }

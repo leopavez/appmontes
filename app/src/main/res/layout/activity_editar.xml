@@ -1,27 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    android:gravity="center"
     tools:context=".view.editar.EditarActivity">
 
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Recorrido:">
+                </TextView>
 
                 <Spinner
                     android:id="@+id/recorridoSpinner"
@@ -31,6 +43,14 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="50dp"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Productor:">
+                </TextView>
+
                 <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/productorSpinner"
                     android:layout_width="match_parent"
@@ -39,6 +59,13 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Producto:">
+                </TextView>
                 <Spinner
                     android:id="@+id/productoSpinner"
                     android:layout_width="match_parent"
@@ -47,6 +74,13 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Variedad:">
+                </TextView>
                 <Spinner
                     android:id="@+id/especieSpinner"
                     android:layout_width="match_parent"
@@ -55,6 +89,13 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Tipo de Tara/Envases::">
+                </TextView>
                 <Spinner
                     android:id="@+id/taraSpinner"
                     android:layout_width="match_parent"
@@ -62,7 +103,6 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"/>
-
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textinputLayoutcantidad"
@@ -77,10 +117,26 @@
                         android:layout_marginTop="30dp"
                         android:drawablePadding="10dp"
                         android:ems="10"
-                        android:hint="Cantidad envase"
+                        android:hint="N° Envases a recepcionar"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Tipo de Envases entregados:">
+                </TextView>
+                <Spinner
+                    android:id="@+id/spinnerEnvasesEntregados"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginBottom="10dp">
+                </Spinner>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textinputlayoutbandejas_entregadas"
@@ -95,9 +151,26 @@
                         android:layout_marginTop="30dp"
                         android:drawablePadding="10dp"
                         android:ems="10"
-                        android:hint="Bandejas entregadas"
+                        android:hint="Envases entregados"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Tipo de Envases pendientes:">
+                </TextView>
+                <Spinner
+                    android:id="@+id/spinnerEnvasesPendientes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginBottom="10dp">
+                </Spinner>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textinputlayoutbandejas_pendientes"
@@ -111,8 +184,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp"
                         android:drawablePadding="10dp"
+                        android:enabled="false"
                         android:ems="10"
-                        android:hint="Bandejas pendientes"
+                        android:hint="Envases pendientes"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -193,6 +267,5 @@
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
-    </ScrollView>
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>
