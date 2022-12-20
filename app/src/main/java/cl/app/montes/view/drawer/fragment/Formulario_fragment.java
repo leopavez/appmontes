@@ -1,6 +1,8 @@
 package cl.app.montes.view.drawer.fragment;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,6 +38,7 @@ import org.w3c.dom.Text;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -50,12 +53,12 @@ public class Formulario_fragment extends Fragment {
 
     SearchableSpinner productor;
     Spinner recorridospinner, productos, variedad, tara, tipoEnvasesPendientes, tipoEnvasesEntregados;
-    TextInputEditText cantidad_envase, kilos_brutos, band_p, band_e, precio_usuario;
+    TextInputEditText cantidad_envase, kilos_brutos, band_p, band_e, precio_usuario, guia, cuartel, sector;
     Button guardar;
     DatabaseHelper myDB;
     TextView kilos_netos, total;
     ProgressDialog progressDialog;
-    TextInputLayout cantidadlayout, bandejas_pendienteslayout, bandejas_entregadaslayout, kilos_brutoslayout, precio_usuariolayout;
+    TextInputLayout cantidadlayout, bandejas_pendienteslayout, bandejas_entregadaslayout, kilos_brutoslayout, precio_usuariolayout, guiaLayout, cuartelLayout, sectorLayout;
 
     ArrayList<String>recorridoid = new ArrayList<>();
     ArrayList<String>productoresid = new ArrayList<>();
@@ -64,8 +67,17 @@ public class Formulario_fragment extends Fragment {
     ArrayList<String>taraid = new ArrayList<>();
     ArrayList<String>tarapeso = new ArrayList<>();
     ArrayList<String>precioproducto = new ArrayList<>();
+    ArrayList<String>normasid = new ArrayList<>();
     String k_netos = "";
     String total__ = "";
+
+    TextView textViewNormas;
+    boolean[] selectedNorma;
+    ArrayList<Integer> langList = new ArrayList<>();
+    ArrayList<Integer> listSelectedNormas = new ArrayList<>();
+    ArrayList<String>normasArrayNames = new ArrayList<>();
+    String[] langArray = {};
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,7 +110,93 @@ public class Formulario_fragment extends Fragment {
         bandejas_entregadaslayout = (TextInputLayout)getView().findViewById(R.id.textinputlayoutbandejas_entregadas);
         bandejas_pendienteslayout = (TextInputLayout)getView().findViewById(R.id.textinputlayoutbandejas_pendientes);
         kilos_brutoslayout = (TextInputLayout)getView().findViewById(R.id.textinputlayoutkilos_brutos);
+        guia = (TextInputEditText)getView().findViewById(R.id.txtguia);
+        guiaLayout = (TextInputLayout)getView().findViewById(R.id.textinputlayoutguia);
+        sector = (TextInputEditText)getView().findViewById(R.id.txtsector);
+        sectorLayout = (TextInputLayout)getView().findViewById(R.id.textinputlayoutsector);
+        cuartel = (TextInputEditText)getView().findViewById(R.id.txtcuartel);
+        cuartelLayout = (TextInputLayout)getView().findViewById(R.id.textinputlayoutcuartel);
         myDB = new DatabaseHelper(getActivity().getApplicationContext());
+
+
+        cargarNormas();
+
+        textViewNormas = (TextView)getView().findViewById(R.id.textviewnorma);
+        selectedNorma = new boolean[langArray.length];
+
+        textViewNormas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getView().getContext());
+
+                // set title
+                builder.setTitle("Seleccione la norma");
+                builder.setCancelable(false);
+
+                builder.setMultiChoiceItems(langArray, selectedNorma, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        if(b){
+                            langList.add(i);
+
+                            Collections.sort(langList);
+                        } else {
+                            langList.remove(Integer.valueOf(i));
+                        }
+                    }
+                });
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        StringBuilder stringBuilder = new StringBuilder();
+
+                        // use for loop
+                        for (int j = 0; j < langList.size(); j++) {
+                            // concat array value
+                            stringBuilder.append(langArray[langList.get(j)]);
+                            // check condition
+                            if (j != langList.size() - 1) {
+                                // When j value  not equal
+                                // to lang list size - 1
+                                // add comma
+                                stringBuilder.append(", ");
+                            }
+                        }
+                        // set text on textView
+                        textViewNormas.setText(stringBuilder.toString());
+                        checkNormas();
+
+                    }
+                });
+
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // dismiss dialog
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                builder.setNeutralButton("Eliminar todo", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // use for loop
+                        for (int j = 0; j < selectedNorma.length; j++) {
+                            // remove all selection
+                            selectedNorma[j] = false;
+                            // clear language list
+                            langList.clear();
+                            // clear text view value
+                            textViewNormas.setText("");
+                        }
+                    }
+                });
+                // show dialog
+                builder.show();
+
+            }
+        });
 
 
         //ADAPTADORES DE SPINNER
@@ -170,6 +268,9 @@ public class Formulario_fragment extends Fragment {
                     if (envases_entregar <= envases_pendientes){
                         String pendientes_nuevo = String.valueOf((envases_pendientes - envases_entregar));
                         band_p.setText(pendientes_nuevo);
+                    } else {
+                        band_e.setError("Cantidad debe ser mayor o igual a la cantidad a recepcionar");
+                        band_e.setText("0");
                     }
 
                     int posicionenvaseentregado = tipoEnvasesEntregados.getSelectedItemPosition();
@@ -301,6 +402,10 @@ public class Formulario_fragment extends Fragment {
 
                     int posicionproducto = productos.getSelectedItemPosition();
                     String precioprod = precioproducto.get(posicionproducto);
+
+                    if(precio_usuario.getText().toString().equals("")){
+                        precio_usuario.setText("0");
+                    }
                     int preciopr = Integer.parseInt(precio_usuario.getText().toString());
 
                     Double knetos = kbrutos - (cant * peso);
@@ -539,6 +644,21 @@ public class Formulario_fragment extends Fragment {
                         errorText.setTextColor(Color.RED);//just to highlight that this is an error
                         errorText.setText("Seleccione productor");//changes the selected item text to this
                     }
+
+                   /** if (listSelectedNormas.size() > 0) {
+                        if(guia.getText().toString().equals("")){
+                            guiaLayout.setErrorEnabled(true);
+                            guiaLayout.setError("Ingrese guia");
+                        }
+                        if(cuartel.getText().toString().equals("")){
+                            cuartelLayout.setErrorEnabled(true);
+                            cuartelLayout.setError("Ingrese cuartel");
+                        }
+                        if(sector.getText().toString().equals("")){
+                            sectorLayout.setErrorEnabled(true);
+                            sectorLayout.setError("Ingrese sector");
+                        }
+                    } **/
                     
                     Toast.makeText(getActivity().getApplicationContext(), "Falta ingresar datos ", Toast.LENGTH_SHORT).show();
                 }else{
@@ -551,7 +671,22 @@ public class Formulario_fragment extends Fragment {
                     progressDialog.show();
                    boolean resultado =  myDB.guardarRegistros(1,fecha,hora,idrecorrido,idproductor,idproductos,idvariedad,
                             idtara,"bandeja",cantidad,kilosb,k_netos,total__,bpendientes, bentregadas, precio_usuario.getText().toString(),
-                           idenvasependiente, idenvaseentregado);
+                           idenvasependiente, idenvaseentregado, cuartel.getText().toString(),guia.getText().toString(),sector.getText().toString(), textViewNormas.getText().toString());
+
+                   SQLiteDatabase db = myDB.getReadableDatabase();
+
+                   Cursor ultimo = db.rawQuery("SELECT id FROM registros ORDER BY id DESC LIMIT 1",null);
+                   ultimo.moveToLast();
+                   int id_registro = ultimo.getInt(0);
+
+                   Log.i("REGISTROOO", String.valueOf(id_registro));
+
+                   if (listSelectedNormas.size() > 0) {
+                       for (int i = 0; i<listSelectedNormas.size(); i++) {
+                           Log.i("REGISTROP", listSelectedNormas.get(i).toString());
+                           boolean resultadoNormas = myDB.guardarNormasRegistros(id_registro, Integer.parseInt(listSelectedNormas.get(i).toString()));
+                       }
+                   }
 
                    if (resultado){
                        progressDialog.dismiss();
@@ -646,6 +781,18 @@ public class Formulario_fragment extends Fragment {
         variedad.setAdapter(adapterVariedad);
     }
 
+    private void cargarNormas(){
+        //SPINNER NORMAS
+        SQLiteDatabase db = myDB.getReadableDatabase();
+
+        Cursor c = db.rawQuery("SELECT id, name FROM normas ORDER BY name ASC", null);
+        while (c.moveToNext()){
+            normasArrayNames.add(c.getString(c.getColumnIndex("name")));
+            normasid.add(c.getString(c.getColumnIndex("id")));
+        }
+        langArray = normasArrayNames.toArray(new String[0]);
+    }
+
 
     private void cargarTara(){
         //SPINNER VARIEDAD
@@ -670,6 +817,37 @@ public class Formulario_fragment extends Fragment {
         tara.setAdapter(adapterTara);
         tipoEnvasesPendientes.setAdapter(adapterTara);
         tipoEnvasesEntregados.setAdapter(adapterTara);
+    }
 
+    public void checkNormas() {
+        for (int i = 0; i<langList.size(); i++) {
+            String norma = langArray[langList.get(i)].toUpperCase();
+            SQLiteDatabase db = myDB.getWritableDatabase();
+
+            if(norma.equals("NO APLICA")) {
+                cuartel.setEnabled(false);
+                cuartel.setText("NO APLICA");
+                guia.setEnabled(false);
+                guia.setText("NO APLICA");
+                sector.setEnabled(false);
+                sector.setText("NO APLICA");
+            } else {
+                Cursor cursor = db.rawQuery("SELECT id, name FROM normas WHERE upper(name) ='"+norma+"'" , null);
+
+                while (cursor.moveToNext()){
+                    int id = cursor.getInt(0);
+                    String name = cursor.getString(1);
+
+                    boolean existe = listSelectedNormas.contains(id);
+                    if(!existe){
+                        listSelectedNormas.add(id);
+                    }
+                }
+                cuartel.setEnabled(true);
+                guia.setEnabled(true);
+                sector.setEnabled(true);
+            }
+
+        }
     }
 }

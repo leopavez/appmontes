@@ -73,8 +73,9 @@ public class Listado_fragment extends Fragment {
     ArrayList<String> listaidregistros = new ArrayList<>();
     RequestQueue mRequestQueue;
     StringRequest mStringRequest;
-   //String PROCESAR_URL = "https://agricolalosdelmonte.com/sistema/backend/public/api/v1/api/procesar";
-    String PROCESAR_URL = "https://ac-turing.cl/sistema/backend/public/api/v1/api/procesar"; //TEST
+    String PROCESAR_URL = "https://agricolalosdelmonte.com/sistema/backend/public/api/v1/api/procesar";
+    //String PROCESAR_URL = "https://ac-turing.cl/sistema/backend/public/api/v1/api/procesar"; //TEST
+    //String PROCESAR_URL = "http://192.168.1.160:8000/api/v1/api/procesar";
     ProgressDialog progressDialog;
     SwipeMenuListView listado;
     TableLayout tabla_registros;
@@ -120,6 +121,7 @@ public class Listado_fragment extends Fragment {
                     SQLiteDatabase db = myDB.getWritableDatabase();
 
                     db.execSQL("DELETE FROM registros");
+                    db.execSQL("DELETE FROM registros_normas");
 
                     Toast.makeText(getActivity().getApplicationContext(), "Los datos fueron eliminados correctamente", Toast.LENGTH_SHORT).show();
 
@@ -249,6 +251,7 @@ public class Listado_fragment extends Fragment {
     private void eliminarRegistro(String id){
         SQLiteDatabase db = myDB.getWritableDatabase();
         db.execSQL("DELETE FROM registros WHERE id ='"+id+"'");
+        db.execSQL("DELETE FROM registros_normas WHERE id_registro ='"+id+"'");
         Toast.makeText(getActivity().getApplicationContext(), "Registro eliminado correctamente.", Toast.LENGTH_SHORT).show();
         Fragment fragment = new Listado_fragment();
         getFragmentManager().beginTransaction().add(R.id.content_frame, fragment).commit();
@@ -276,9 +279,11 @@ public class Listado_fragment extends Fragment {
                 SQLiteDatabase db = myDB.getWritableDatabase();
                 Cursor cursor = db.rawQuery("SELECT id, id_usuario, fecha, hora, recorrido, productor, producto, " +
                         "variedad, tara, bandeja, cantidad_envase, kilos_brutos, kilos_netos, total, bandejas_pendientes," +
-                        "bandejas_entregadas, precio_usuario, kilos_netos, tipo_envase_pendiente, tipo_envase_entregado FROM registros", null);
+                        "bandejas_entregadas, precio_usuario, kilos_netos, tipo_envase_pendiente, tipo_envase_entregado, guia, cuartel, sector FROM registros", null);
 
                 while (cursor.moveToNext()) {
+
+                    ArrayList<Integer> normasid = new ArrayList<>();
 
                     int id = cursor.getInt(0);
                     String recorridos_id = cursor.getString(4);
@@ -295,6 +300,18 @@ public class Listado_fragment extends Fragment {
                     String kilos_netos = cursor.getString(17);
                     String tipoenvase_pendiente = cursor.getString(18);
                     String tipoenvase_entregado = cursor.getString(19);
+                    String guia = cursor.getString(20);
+                    String cuartel = cursor.getString(21);
+                    String sector = cursor.getString(22);
+
+                    Cursor cursorRegistrosNormas = db.rawQuery("SELECT id_norma FROM registros_normas WHERE id_registro ='"+id+"'", null);
+
+                    while (cursorRegistrosNormas.moveToNext()) {
+                        int id_norma = cursorRegistrosNormas.getInt(0);
+                        normasid.add(id_norma);
+                    }
+
+                    Log.i("SIZEEEE", String.valueOf(normasid.size()));
 
 
                     final RequestParams params = new RequestParams();
@@ -305,14 +322,23 @@ public class Listado_fragment extends Fragment {
                     params.put("fecha", fecha);
                     params.put("taras_id", taras_id);
                     params.put("bandejas", bandejas_cant);
-                    params.put("kilos_brutos", kilos_b);
-                    params.put("kilos_netos", kilos_netos);
+                    params.put("kilos_brutos", kilos_b.replace(",",""));
+                    params.put("kilos_netos", kilos_netos.replace(",",""));
                     params.put("precio", precio_usuario);
                     params.put("hora", hora);
                     params.put("envases_pendiente_id", tipoenvase_pendiente);
                     params.put("envases_pendiente_cantidad", bandejas_pend);
                     params.put("envases_entregado_id", tipoenvase_entregado);
                     params.put("envases_entregado_cantidad", bandejas_entre);
+                    params.put("guia", guia);
+                    params.put("cuartel", cuartel);
+                    params.put("sector", sector);
+                    if(normasid.size() > 0) {
+                        params.put("normas", normasid);
+                    } else {
+                        params.put("normas", "NO APLICA");
+                    }
+
 
                     Handler handler = new Handler(Looper.getMainLooper());
                     Runnable runnable = new Runnable() {

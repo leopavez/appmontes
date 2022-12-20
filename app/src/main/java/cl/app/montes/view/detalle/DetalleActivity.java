@@ -21,7 +21,7 @@ public class DetalleActivity extends AppCompatActivity {
     String id_registro = "";
     DatabaseHelper myDB;
     TextView recorrido, productor, fechahora, producto, variedad, tara, bandejas_p, bandejas_e, cantidad, kb, kn, total, precio_usuario,
-    tipoenvasependiente, tipoenvasesentregados;
+    tipoenvasependiente, tipoenvasesentregados, normas, guia, cuartel, sector;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +45,10 @@ public class DetalleActivity extends AppCompatActivity {
         precio_usuario = (TextView)findViewById(R.id.tvprecio_usuario);
         tipoenvasependiente = (TextView)findViewById(R.id.tvtipoenvasespendientes);
         tipoenvasesentregados = (TextView)findViewById(R.id.tvtipoenvasesentregados);
+        normas = (TextView)findViewById(R.id.tvnormasl);
+        guia = (TextView)findViewById(R.id.tvguia);
+        cuartel = (TextView)findViewById(R.id.tvcuartel);
+        sector = (TextView)findViewById(R.id.tvsector);
 
         cargarDetalle();
 
@@ -62,7 +66,8 @@ public class DetalleActivity extends AppCompatActivity {
 
             Cursor cursor = db.rawQuery("SELECT reg.fecha, reg.hora, reco.name, pro.razon_social, prod.name, va.name, " +
                     "ta.name_envase, reg.bandejas_pendientes, reg.bandejas_entregadas, reg.cantidad_envase, reg.kilos_brutos, " +
-                    "reg.kilos_netos, reg.total, reg.precio_usuario, t1.name_envase, t2.name_envase FROM registros reg " +
+                    "reg.kilos_netos, reg.total, reg.precio_usuario, t1.name_envase, t2.name_envase, reg.normatext, reg.guia," +
+                    "reg.cuartel, reg.sector FROM registros reg " +
                     "INNER JOIN recorrido reco ON reg.recorrido = reco.id " +
                     "INNER JOIN productores pro ON reg.productor = pro.id " +
                     "INNER JOIN productos prod ON reg.producto = prod.id " +
@@ -89,7 +94,10 @@ public class DetalleActivity extends AppCompatActivity {
                 precio_usuario.setText("Precio: "+cursor.getString(13));
                 tipoenvasependiente.setText("Tipo de Envases pendientes: "+cursor.getString(14));
                 tipoenvasesentregados.setText("Tipo de Envases entregados: "+cursor.getString(15));
-
+                normas.setText("Normas: "+ cursor.getString(16));
+                guia.setText("Guia: "+ cursor.getString(17));
+                cuartel.setText("Cuartel: "+ cursor.getString(18));
+                sector.setText("Sector: "+ cursor.getString(19));
             }
         }catch (Exception e){
             e.printStackTrace();

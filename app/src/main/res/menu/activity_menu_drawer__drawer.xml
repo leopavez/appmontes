@@ -19,6 +19,11 @@
                 android:icon="@drawable/ic_baseline_account_balance_24"
                 android:title="C. Corriente envases">
             </item>
+            <item
+                android:id="@+id/nav_listado_cc"
+                android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+                android:title="Listado de C. Corriente E.">
+            </item>
         </menu>
     </item>
 </menu>

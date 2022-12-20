@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import cl.app.montes.R;
 import cl.app.montes.clases.Usuarios;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     Button sincronizar;
     TextView ultsincronizacion;
     String API_SINCROINZAR = "https://agricolalosdelmonte.com/sistema/backend/public/api/v1/api/sincronizar";
+    //String API_SINCROINZAR = "https://ac-turing.cl/sistema/backend/public/api/v1/api/sincronizar";
+    //String API_SINCROINZAR = "http://192.168.1.160:8000/api/v1/api/sincronizar";
     ProgressDialog progressDialog;
     RequestQueue mRequestQueue;
     StringRequest mStringRequest;
@@ -107,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
                         JSONArray jsonRecorridos = jsonObject.getJSONArray("recorridos");
                         JSONArray jsonVariedad = jsonObject.getJSONArray("variedad");
                         JSONArray jsonTara = jsonObject.getJSONArray("taras");
+                        JSONArray jsonEnvasesPendientes = jsonObject.getJSONArray("envasesPendientes");
+                        JSONArray jsonEnvasesRecuperar = jsonObject.getJSONArray("envasesRecuperar");
+                        JSONArray jsonNormas = jsonObject.getJSONArray("normas");
 
                         SQLiteDatabase db = myDB.getWritableDatabase();
 
@@ -116,7 +122,11 @@ public class MainActivity extends AppCompatActivity {
                         db.execSQL("DELETE FROM recorrido");
                         db.execSQL("DELETE FROM variedad");
                         db.execSQL("DELETE FROM tara");
-
+                        db.execSQL("DELETE FROM envasesPendientes");
+                        db.execSQL("DELETE FROM envasesRecuperar");
+                        db.execSQL("DELETE FROM registros_devolucion");
+                        db.execSQL("DELETE FROM registros_recuperar");
+                        db.execSQL("DELETE FROM normas");
 
                         for (int i = 0;  i<jsonUsuarios.length(); i++){
                             JSONObject data = jsonUsuarios.getJSONObject(i);
@@ -192,12 +202,60 @@ public class MainActivity extends AppCompatActivity {
                             int id = data.getInt("id");
                             String peso = data.getString("peso");
                             String name_envase = data.getString("name_envase");
+                            String envase_id = data.getString("envase_id");
 
                             Cursor getVariedad = db.rawQuery("SELECT id, peso, name_envase FROM tara WHERE id ='"+id+"'",null);
 
                             if (getVariedad.getCount() <= 0){
                                 //NO EXISTE TARA
-                                myDB.guardarTara(id,peso,name_envase);
+                                myDB.guardarTara(id,peso,name_envase, envase_id);
+                            }
+                        }
+
+                        for (int i = 0; i<jsonEnvasesPendientes.length(); i++) {
+                            JSONObject data = jsonEnvasesPendientes.getJSONObject(i);
+
+                            int id = data.getInt("id");
+                            int productor_id = data.getInt("productor_id");
+                            int envase_id = data.getInt("envase_id");
+                            int cantidad = data.getInt("cantidad");
+                            String fecha = data.getString("fecha");
+
+                            Cursor getDatos = db.rawQuery("SELECT id, productor_id, envase_id, cantidad, fecha  FROM envasesPendientes WHERE id ='"+id+"'",null);
+
+                            if (getDatos.getCount() <= 0){
+                                //NO EXISTE
+                                myDB.guardarEnvasesPendientes(id, productor_id, envase_id, cantidad, fecha);
+                            }
+                        }
+
+                        for (int i = 0; i<jsonEnvasesRecuperar.length(); i++) {
+                            JSONObject data = jsonEnvasesRecuperar.getJSONObject(i);
+
+                            int id = data.getInt("id");
+                            int productor_id = data.getInt("productor_id");
+                            int envase_id = data.getInt("envase_id");
+                            int cantidad = data.getInt("cantidad");
+                            String fecha = data.getString("fecha");
+
+                            Cursor getDatos = db.rawQuery("SELECT id, productor_id, envase_id, cantidad, fecha  FROM envasesRecuperar WHERE id ='"+id+"'",null);
+
+                            if (getDatos.getCount() <= 0){
+                                //NO EXISTE
+                                myDB.guardarEnvasesRecuperar(id, productor_id, envase_id, cantidad, fecha);
+                            }
+                        }
+
+                        for (int i = 0;  i<jsonNormas.length(); i++){
+                            JSONObject data = jsonNormas.getJSONObject(i);
+                            int id = data.getInt("id");
+                            String name = data.getString("name");
+
+                            Cursor getNormas = db.rawQuery("SELECT id, name FROM normas WHERE id ='"+id+"'",null);
+
+                            if (getNormas.getCount() <= 0){
+                                //NO EXISTE NORMA
+                                myDB.guardarNormas(id,name);
                             }
                         }
 

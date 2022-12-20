@@ -143,6 +143,46 @@
                 android:textStyle="bold">
             </TextView>
 
+            <TextView
+                android:id="@+id/tvnormasl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="Normas:"
+                android:textStyle="bold">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvguia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="Guia: "
+                android:textStyle="bold">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvcuartel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="Cuartel: "
+                android:textStyle="bold">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvsector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="Sector: "
+                android:textStyle="bold">
+            </TextView>
+
         <TextView
             android:id="@+id/tvkilosbrutos"
             android:layout_width="wrap_content"
